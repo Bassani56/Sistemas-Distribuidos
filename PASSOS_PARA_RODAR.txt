@@ -1,0 +1,7 @@
+abrir o dockerfile do windows
+
+terminal: 
+
+- docker start rabbitmq
+
+e acessar o enedereço http://localhost:15672
