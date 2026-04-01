@@ -1,0 +1,60 @@
+{
+    "eletronicos": [
+        {
+            "nome": "fone bluetooth",
+            "preco": "120",
+            "id": "11112222",
+            "categoria": "eletronicos"
+        },
+        {
+            "nome": "teclado gamer",
+            "preco": "250",
+            "id": "33334444",
+            "categoria": "eletronicos"
+        },
+        {
+            "nome": "mouse gamer",
+            "preco": "100",
+            "id": "04454660",
+            "categoria": "eletronicos"
+        }
+    ],
+    "roupas": [
+        {
+            "nome": "calca",
+            "preco": "20",
+            "id": "99975816",
+            "categoria": "roupas"
+        },
+        {
+            "nome": "camisa",
+            "preco": "25",
+            "id": "04176199",
+            "categoria": "roupas"
+        }
+    ],
+    "calcados": [
+        {
+            "nome": "tenis",
+            "preco": "40",
+            "id": "93871899",
+            "categoria": "calcados"
+        }
+    ],
+    "acessorios": [
+        {
+            "nome": "bone",
+            "preco": "15",
+            "id": "27856468",
+            "categoria": "acessorios"
+        }
+    ],
+    "comida": [
+        {
+            "nome": "pizza",
+            "preco": "50",
+            "id": "55556666",
+            "categoria": "comida"
+        }
+    ]
+}

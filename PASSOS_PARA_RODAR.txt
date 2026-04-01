@@ -5,3 +5,12 @@ terminal:
 - docker start rabbitmq
 
 e acessar o enedereço http://localhost:15672
+
+senha e usuario: guest
+
+
+docker exec -it rabbitmq rabbitmqctl list_queues
+
+
+Depurar um tipo de erro:
+docker exec -it rabbitmq rabbitmqctl list_queues name messages_ready messages_unacknowledged
