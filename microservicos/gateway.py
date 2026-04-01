@@ -54,8 +54,7 @@ while True:
     menu = """\nEscolha uma opção:
                 1 - Cadastrar Promoção
                 2 - Votar
-                3 - Notificações
-                4 - Listar Promoções
+                3 - Listar Promoções
                 0 - Sair
                 > """
     print(menu)
@@ -72,7 +71,6 @@ while True:
         consume(channel, 'queue_gateway', 'promocao.recebida')
 
     if resp == '3':
-        pass
+         consume(channel, 'queue_gateway', 'promocao.recebida')
 
-    if resp == '4':
-        consume(channel, 'queue_gateway', 'promocao.recebida')
+       
