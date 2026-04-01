@@ -27,7 +27,6 @@ class RabbitMqConsumer:
 
         channel = pika.BlockingConnection(connection_parameters).channel()
 
-
         # channel.queue_bind(exchange=exchange_name,
         #                 queue=queue_name,
         #                 routing_key='black')
