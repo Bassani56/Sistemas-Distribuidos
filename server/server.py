@@ -4,7 +4,6 @@ import time
 import json
 
 
-
 def connect():
     connection_parameters = pika.ConnectionParameters(
         host="localhost",
@@ -19,9 +18,6 @@ def connect():
 
     return channel
 
-
-
-
 def publish(channel, routingKey,  message):
     channel.basic_publish(
         exchange='promocoes',
@@ -30,6 +26,7 @@ def publish(channel, routingKey,  message):
         properties=pika.BasicProperties(
           delivery_mode= pika.DeliveryMode.Persistent
     ))
+    
 
 def consume(channel, queue, routingKey):
     channel.queue_declare(

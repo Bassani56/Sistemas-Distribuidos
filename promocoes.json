@@ -17,6 +17,12 @@
             "preco": "100",
             "id": "04454660",
             "categoria": "eletronicos"
+        },
+        {
+            "id": "71640813",
+            "nome": "celular",
+            "categoria": "eletronicos",
+            "preco": "25"
         }
     ],
     "roupas": [
@@ -55,6 +61,14 @@
             "preco": "50",
             "id": "55556666",
             "categoria": "comida"
+        }
+    ],
+    "tecido": [
+        {
+            "id": "45952109",
+            "nome": "botao",
+            "categoria": "tecido",
+            "preco": "2"
         }
     ]
 }

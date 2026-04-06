@@ -1,22 +1,44 @@
 [
     {
         "id": "93871899",
-        "votos": 4
+        "voto_positivo": 6,
+        "voto_negativo": 0,
+        "score": 6
     },
     {
         "id": "04176199",
-        "votos": 2
+        "voto_positivo": 1,
+        "voto_negativo": 0,
+        "score": 1
     },
     {
         "id": "99975816",
-        "votos": 2
+        "voto_positivo": 3,
+        "voto_negativo": 0,
+        "score": 3
     },
     {
         "id": "27856468",
-        "votos": 1
+        "voto_positivo": 2,
+        "voto_negativo": 0,
+        "score": 2
     },
     {
         "id": "04454660",
-        "votos": 1
+        "voto_positivo": 1,
+        "voto_negativo": 0,
+        "score": 1
+    },
+    {
+        "id": "55556666",
+        "voto_positivo": 2,
+        "voto_negativo": 0,
+        "score": 2
+    },
+    {
+        "id": "45952109",
+        "voto_positivo": 1,
+        "voto_negativo": 0,
+        "score": 1
     }
 ]
