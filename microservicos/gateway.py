@@ -42,24 +42,18 @@ def cadastrar_promocao(channel, nome, categoria, preco):
     publish(channel, "promocao.recebida", promocao) #MS_promocao
     print("[Gateway] Promoção enviada")
 
-def listar_promocoes(current_client):
+def listar_promocoes():
     with open(caminho_promocoes, 'r', encoding='utf-8') as f:
         promocoes = json.load(f)
 
-        # print("\n=== RANKING ===")
-        # for categoria, lista in promocoes.items():
-        #     print(categoria)
+        print("\n=== RANKING ===")
+        for categoria, lista in promocoes.items():
+            print(categoria)
 
-        #     for produto in lista:
-        #         print('    ', produto)
+            for produto in lista:
+                print('    ', produto)
 
-        dados = promocoes
-        for interesse in current_client["interesse"]:
-            print(f"\nInteresse: {interesse}")
-
-            if interesse in dados:
-                for produto in dados[interesse]:
-                    print(f"- {produto['nome']} | R$ {produto['preco']}")
+        
                         
 
 def votar(channel, routingKey, message):
@@ -104,6 +98,6 @@ def main():
                 votar(channel, 'promocao.voto', {"voto": -1, "ident": id})
 
         if resp == '3':
-            listar_promocoes(current_client)
+            listar_promocoes()
 
 main()
