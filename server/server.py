@@ -18,7 +18,7 @@ def connect():
 
     return channel
 
-def publish(channel, routingKey,  message):
+def publish(channel, routingKey, message):
     channel.basic_publish(
         exchange='promocoes',
         routing_key=routingKey,

@@ -40,5 +40,11 @@
         "voto_positivo": 1,
         "voto_negativo": 0,
         "score": 1
+    },
+    {
+        "id": "25057631",
+        "voto_positivo": 6,
+        "voto_negativo": 0,
+        "score": 6
     }
 ]

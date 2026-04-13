@@ -9,48 +9,56 @@ import random
 
 
 def iniciar_bindings():
-    channel.exchange_declare(exchange='promocoes',
-        exchange_type='direct')
-    
-    key = 'promocao.destaque'
-    channel.queue_declare(
-        queue='fila_notificacao',
-        durable=True
+    channel.exchange_declare(
+        exchange='promocoes',
+        exchange_type='direct'
     )
- 
-    channel.queue_bind(exchange='promocoes',
-        queue='fila_notificacao',
-        routing_key=key)
-
-def minha_callback(channel, method, properties, body):
-    print(f" [x] Received {body.decode()}")
-    time.sleep(body.count(b'.'))
-    print(" [x] Done")
-    channel.basic_ack(delivery_tag = method.delivery_tag)
-
-def consume(channel, queue, routingKey):
+    
     channel.queue_declare(
-        queue=queue,
+        queue='fila_notificacao',
         durable=True
     )
 
     channel.queue_bind(
         exchange='promocoes',
-        queue=queue,
-        routing_key=routingKey
+        queue='fila_notificacao',
+        routing_key='promocao.publicada'
     )
 
+    channel.queue_bind(
+        exchange='promocoes',
+        queue='fila_notificacao',
+        routing_key='promocao.destaque'
+    )
+
+def minha_callback(channel, method, properties, body):
+    mensagem = json.loads(body.decode()) 
+    print(mensagem)
+    print('enviou ao client')
+    print('HOT DEAL')
+    #DEVE ENVIAR PROMOCAO DESTACADA AO CLIENTE
+    #if destaque categoria X:
+        #publish(channel, promocao.categoria1, body)
+    
+    #if destaque categoria Y
+        #publish(channel, promocao.categoria2, body)
+    
+
+def consume(channel, queue):
     channel.basic_consume(
         queue=queue,
-        auto_ack=False,
-        on_message_callback = minha_callback
+        auto_ack=True,
+        on_message_callback=minha_callback
     )
 
-    print(f"[*] Consumindo {routingKey}")
+    print("[*] Consumindo promocao.destaque / promocao.publicada ")
     channel.start_consuming()
+
 
 channel = connect()
 iniciar_bindings()
 
-consume(channel, 'fila_notificacao', 'promocao.destaque')
+channel = connect()
+iniciar_bindings()
 
+consume(channel, 'fila_notificacao')

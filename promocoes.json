@@ -23,6 +23,12 @@
             "nome": "celular",
             "categoria": "eletronicos",
             "preco": "25"
+        },
+        {
+            "id": "25057631",
+            "nome": "controle",
+            "categoria": "eletronicos",
+            "preco": "17"
         }
     ],
     "roupas": [

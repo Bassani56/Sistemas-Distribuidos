@@ -28,6 +28,9 @@ def iniciar_bindings():
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode())
 
+    #DEVE SER FEITO A ASSINATURA DIGITAL
+    #----------- ele não precisa validar chave ------------
+
     voto = mensagem['voto']
     ident = mensagem['ident']
 
@@ -37,6 +40,7 @@ def minha_callback(channel, method, properties, body):
         votos_lista = json.load(f)
 
     encontrou = False
+    item_destaque = False
 
     for item in votos_lista:
         if item['id'] == ident:
@@ -48,6 +52,10 @@ def minha_callback(channel, method, properties, body):
                 item['voto_negativo'] += 1
                 item['score'] = item['voto_positivo'] - item['voto_negativo']
                 encontrou = True
+
+            if item['score'] > 5:
+                item_destaque = True
+
             break
 
     if not encontrou:
@@ -72,8 +80,9 @@ def minha_callback(channel, method, properties, body):
 
     print("Voto atualizado!")
 
-    channel.basic_ack(delivery_tag=method.delivery_tag)
-
+    if item_destaque: #se o item tem score maior que 5, vira destaque
+        publish(channel, 'promocao.destaque', ident)
+        print('enviou ao notificacao')
 
 def consume(channel, queue, routingKey):
     channel.queue_declare(
@@ -89,7 +98,7 @@ def consume(channel, queue, routingKey):
 
     channel.basic_consume(
         queue=queue,
-        auto_ack=False,
+        auto_ack=True,
         on_message_callback = minha_callback
     )
 

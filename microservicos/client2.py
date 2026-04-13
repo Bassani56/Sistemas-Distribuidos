@@ -5,7 +5,7 @@ import time
 import json
 
 from server.server import connect, publish
-import random
+
 
 def iniciar_bindings():
     channel.exchange_declare(exchange='promocoes',
@@ -26,7 +26,6 @@ def minha_callback(channel, method, properties, body):
     print('Nova promoção publicada: ', mensagem)
 
 
-
 def consume(channel, queue, routingKey):
     channel.queue_declare(
         queue=queue,
@@ -41,7 +40,7 @@ def consume(channel, queue, routingKey):
 
     channel.basic_consume(
         queue=queue,
-        auto_ack=True,
+        auto_ack=False,
         on_message_callback = minha_callback
     )
 
@@ -51,5 +50,5 @@ def consume(channel, queue, routingKey):
 channel = connect()
 iniciar_bindings()
 
-consume(channel, 'fila_cliente_a', 'promocao.categoria1')
-consume(channel, 'fila_cliente_a', 'promocao_destaque')
+consume(channel, 'fila_cliente_b', 'promocao.categoria2')
+consume(channel, 'fila_cliente_b', 'promocao_destaque')

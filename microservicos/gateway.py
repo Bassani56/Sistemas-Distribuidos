@@ -2,6 +2,8 @@ import sys
 import os
 import json
 
+import threading
+
 sys.path.append(os.path.abspath(".."))
 
 from server.server import connect, publish
@@ -10,6 +12,28 @@ import random
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 caminho = os.path.join(BASE_DIR, '..', 'votos.json')
 caminho_promocoes = os.path.join(BASE_DIR, '..', 'promocoes.json') 
+
+
+def consume(channel, queue, routingKey):
+    channel.queue_declare(
+        queue=queue,
+        durable=True
+    )
+
+    channel.queue_bind(
+        exchange='promocoes',
+        queue=queue,
+        routing_key=routingKey
+    )
+
+    channel.basic_consume(
+        queue=queue,
+        auto_ack=True,
+        on_message_callback = minha_callback
+    )
+
+    print(f"[*] Consumindo {routingKey}")
+    channel.start_consuming()
 
 def iniciar_bindings(channel):
     channel.exchange_declare(exchange='promocoes',
@@ -40,7 +64,7 @@ def cadastrar_promocao(channel, nome, categoria, preco):
     }
 
     publish(channel, "promocao.recebida", promocao) #MS_promocao
-    print("[Gateway] Promoção enviada")
+    print("[Gateway] Promoção enviada ao promocao ")
 
 def listar_promocoes():
     with open(caminho_promocoes, 'r', encoding='utf-8') as f:
@@ -53,16 +77,50 @@ def listar_promocoes():
             for produto in lista:
                 print('    ', produto)
 
-        
                         
 
 def votar(channel, routingKey, message):
    publish(channel, routingKey, message)  #MS_ranking
 
 
+
+def minha_callback(channel, method, properties, body):
+    mensagem = json.loads(body.decode()) 
+    print(mensagem)
+
+    with open(caminho_promocoes, 'r', encoding='utf-8') as f:
+        promocoes = json.load(f)
+
+    categoria = mensagem['categoria']
+
+    # Se já existe a categoria
+    if categoria in promocoes:
+        if not isinstance(promocoes[categoria], list):
+            promocoes[categoria] = [promocoes[categoria]]
+
+        promocoes[categoria].append(mensagem)
+
+    else:
+        # cria nova categoria como lista
+        promocoes[categoria] = [mensagem]
+
+    with open(caminho_promocoes, 'w', encoding='utf-8') as f:
+        json.dump(promocoes, f, indent=4, ensure_ascii=False)
+
+    print("Promoção salva!")
+
+
 def main():
     channel = connect()
     iniciar_bindings(channel)
+
+    t = threading.Thread(
+        target=consume,
+        args=(channel, 'fila_gateway', 'promocao.publicada'),
+        daemon=True
+    )
+
+    t.start()
 
     while True:
         menu = """\nEscolha uma opção:
@@ -87,11 +145,11 @@ def main():
 
             listar_promocoes()
 
-        # ordenar do maior para o menor
+            # ordenar do maior para o menor
             dados.sort(key=lambda x: x['score'], reverse=True)
 
             id = input('id: ')
-            vt = input('+1 ?  (1) \n -1 ? (-1) \n > ')
+            vt = input("Vote: +1 positivo | -1 negativo: ")
             if vt == '1':
                 votar(channel, 'promocao.voto', {"voto": 1, "ident": id})
             else:
