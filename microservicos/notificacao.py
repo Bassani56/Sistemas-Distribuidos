@@ -58,7 +58,4 @@ def consume(channel, queue):
 channel = connect()
 iniciar_bindings()
 
-channel = connect()
-iniciar_bindings()
-
 consume(channel, 'fila_notificacao')
