@@ -3,48 +3,49 @@
         "id": "93871899",
         "voto_positivo": 6,
         "voto_negativo": 0,
-        "score": 6
+        "score": 6,
+        "categoria": "calcados"
     },
     {
         "id": "04176199",
         "voto_positivo": 1,
         "voto_negativo": 0,
-        "score": 1
+        "score": 1,
+        "categoria": "roupas"
     },
     {
         "id": "99975816",
         "voto_positivo": 3,
         "voto_negativo": 0,
-        "score": 3
+        "score": 3,
+        "categoria": "roupas"
     },
     {
         "id": "27856468",
         "voto_positivo": 2,
         "voto_negativo": 0,
-        "score": 2
+        "score": 2,
+        "categoria": "acessorios"
     },
     {
         "id": "04454660",
-        "voto_positivo": 1,
+        "voto_positivo": 6,
         "voto_negativo": 0,
-        "score": 1
+        "score": 6,
+        "categoria": "eletronicos"
     },
     {
         "id": "55556666",
         "voto_positivo": 2,
         "voto_negativo": 0,
-        "score": 2
+        "score": 2,
+        "categoria": "comida"
     },
     {
         "id": "45952109",
         "voto_positivo": 1,
         "voto_negativo": 0,
-        "score": 1
-    },
-    {
-        "id": "25057631",
-        "voto_positivo": 6,
-        "voto_negativo": 0,
-        "score": 6
+        "score": 1,
+        "categoria": "tecido"
     }
 ]

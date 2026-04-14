@@ -43,8 +43,11 @@ def iniciar_bindings():
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
     print(mensagem)
-    #AQUI ELE DEVE VALIDAR O HASH E ENVIAR PARA O GATEWAY E ASSINAR DIGITALMENTE
-    publish(channel, 'promocao.publicada', mensagem)
+
+    payload = mensagem.get("Payload")
+    signature = mensagem.get("Signature")
+
+    publish(channel, 'promocao.publicada', ['promocao.publicada', payload[1]], service_name='promocao')
     print('enviou o gateway')
 
 def consume(channel, queue, routingKey):

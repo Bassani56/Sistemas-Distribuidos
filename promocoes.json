@@ -19,16 +19,16 @@
             "categoria": "eletronicos"
         },
         {
-            "id": "71640813",
-            "nome": "celular",
+            "id": "11736027",
+            "nome": "fone",
             "categoria": "eletronicos",
-            "preco": "25"
+            "preco": "12"
         },
         {
-            "id": "25057631",
+            "id": "89028656",
             "nome": "controle",
             "categoria": "eletronicos",
-            "preco": "17"
+            "preco": "12"
         }
     ],
     "roupas": [
@@ -51,6 +51,18 @@
             "preco": "40",
             "id": "93871899",
             "categoria": "calcados"
+        },
+        {
+            "id": "45599771",
+            "nome": "bermuda",
+            "categoria": "calcados",
+            "preco": "20"
+        },
+        {
+            "id": "11408335",
+            "nome": "camisola",
+            "categoria": "calcados",
+            "preco": "12"
         }
     ],
     "acessorios": [
@@ -75,6 +87,14 @@
             "nome": "botao",
             "categoria": "tecido",
             "preco": "2"
+        }
+    ],
+    "teste": [
+        {
+            "id": "70143180",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "12"
         }
     ]
 }

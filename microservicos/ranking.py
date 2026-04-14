@@ -27,12 +27,16 @@ def iniciar_bindings():
 
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode())
-
+    print(mensagem)
     #DEVE SER FEITO A ASSINATURA DIGITAL
     #----------- ele não precisa validar chave ------------
 
-    voto = mensagem['voto']
-    ident = mensagem['ident']
+    payload = mensagem.get("Payload")
+    signature = mensagem.get("Signature")
+
+    voto = payload[1]['voto']
+    ident = payload[1]['ident']
+    categoria = payload[1]['categoria']
 
     print(f"Recebido voto {voto} para ID {ident}")
 
@@ -42,15 +46,18 @@ def minha_callback(channel, method, properties, body):
     encontrou = False
     item_destaque = False
 
+
     for item in votos_lista:
         if item['id'] == ident:
             if voto > 0:
                 item['voto_positivo'] += 1
                 item['score'] = item['voto_positivo'] - item['voto_negativo']
+
                 encontrou = True
             else:
                 item['voto_negativo'] += 1
                 item['score'] = item['voto_positivo'] - item['voto_negativo']
+
                 encontrou = True
 
             if item['score'] > 5:
@@ -64,7 +71,8 @@ def minha_callback(channel, method, properties, body):
                 "id": ident,
                 "voto_positivo": 1,
                 "voto_negativo": 0,
-                "score": 1
+                "score": 1,
+                "categoria": categoria
             })
 
         else:
@@ -72,7 +80,8 @@ def minha_callback(channel, method, properties, body):
                 "id": ident,
                 "voto_positivo": 0,
                 "voto_negativo": 1,
-                "score": -1
+                "score": -1,
+                "categoria": categoria
             })
 
     with open(caminho_votos, 'w', encoding='utf-8') as f:
@@ -81,7 +90,7 @@ def minha_callback(channel, method, properties, body):
     print("Voto atualizado!")
 
     if item_destaque: #se o item tem score maior que 5, vira destaque
-        publish(channel, 'promocao.destaque', ident)
+        publish(channel, 'promocao.destaque', ['promocao.destaque', ident, categoria], service_name='ranking')
         print('enviou ao notificacao')
 
 def consume(channel, queue, routingKey):

@@ -34,16 +34,16 @@ def iniciar_bindings():
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
     print(mensagem)
-    print('enviou ao client')
-    print('HOT DEAL')
-    #DEVE ENVIAR PROMOCAO DESTACADA AO CLIENTE
-    #if destaque categoria X:
-        #publish(channel, promocao.categoria1, body)
-    
-    #if destaque categoria Y
-        #publish(channel, promocao.categoria2, body)
-    
 
+    payload = mensagem.get("Payload")
+    signature = mensagem.get("Signature")
+
+    if payload[0] == 'promocao.publicada':
+        print('<< promocao publicada >>')
+        routing_key = f"promocao.{payload[1]['categoria']}"
+        print('routing key: ', routing_key)
+        publish(channel, routing_key, mensagem, service_name='publicada')
+        
 def consume(channel, queue):
     channel.basic_consume(
         queue=queue,

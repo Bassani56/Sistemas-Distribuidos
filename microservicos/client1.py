@@ -3,11 +3,12 @@ import os
 import pika
 import time 
 import json
+import threading
 
 from server.server import connect, publish
 import random
 
-def iniciar_bindings():
+def iniciar_bindings(channel):
     channel.exchange_declare(
         exchange='promocoes',
         exchange_type='direct'
@@ -27,12 +28,24 @@ def iniciar_bindings():
     channel.queue_bind(
         exchange='promocoes',
         queue='fila_client1',
-        routing_key='promocao.categoria1'
+        routing_key='promocao.eletronicos'
     )
-def minha_callback(channel, method, properties, body):
-    mensagem = json.loads(body.decode())
-    print('Nova promoção publicada: ', mensagem)
 
+def minha_callback(channel, method, properties, body):
+    mensagem = json.loads(body.decode()) 
+    # print(mensagem)
+
+    payload = mensagem.get("Payload")
+    signature = mensagem.get("Signature")
+
+    if payload[0] == 'promocao.destaque':
+        print('<< promocao destaque >>')
+        print('id: ', payload[1])
+        print('categoria: ', payload[2])
+
+    else:
+        print("<< promocao publicada >>")
+        print(payload[1])
 
 
 def consume(channel, queue):
@@ -42,10 +55,35 @@ def consume(channel, queue):
         on_message_callback=minha_callback
     )
 
-    print("[*] Consumindo promocao.destaque / promocao.client1 ")
+    # print("[*] Consumindo promocao.destaque / promocao.eletronicos ")
     channel.start_consuming()
 
-channel = connect()
-iniciar_bindings()
 
-consume(channel, 'fila_client1')
+def main():
+    channel = connect()
+    iniciar_bindings(channel)
+
+    t = threading.Thread(
+        target=consume,
+        args=(channel, 'fila_client1'),
+        daemon=True
+    )
+
+    t.start()
+
+    while True:
+        print("\nDigite uma categoria para se inscrever (ou ENTER para ignorar):")
+        resp = input("> ").strip()
+
+        if resp:
+            routing_key = f'promocao.{resp}'
+
+            channel.queue_bind(
+                exchange='promocoes',
+                queue='fila_client1',
+                routing_key=routing_key
+            )
+
+            print(f"[+] Inscrito em {routing_key}")
+
+main()

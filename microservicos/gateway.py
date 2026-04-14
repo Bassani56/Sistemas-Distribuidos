@@ -63,7 +63,7 @@ def cadastrar_promocao(channel, nome, categoria, preco):
         "preco": preco
     }
 
-    publish(channel, "promocao.recebida", promocao) #MS_promocao
+    publish(channel, "promocao.recebida", ["promocao.recebida", promocao], service_name='gateway') #MS_promocao
     print("[Gateway] Promoção enviada ao promocao ")
 
 def listar_promocoes():
@@ -76,33 +76,30 @@ def listar_promocoes():
 
             for produto in lista:
                 print('    ', produto)
-
-                        
+ 
 
 def votar(channel, routingKey, message):
-   publish(channel, routingKey, message)  #MS_ranking
-
-
-
+    print('voto enviado ao ranking')
+    publish(channel, routingKey, [routingKey, message], service_name='gateway')  #MS_ranking
+    
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
     print(mensagem)
 
+    payload = mensagem.get("Payload")
+    signature = mensagem.get("Signature")
+
     with open(caminho_promocoes, 'r', encoding='utf-8') as f:
         promocoes = json.load(f)
 
-    categoria = mensagem['categoria']
+    categoria = payload[1]['categoria']
 
-    # Se já existe a categoria
     if categoria in promocoes:
         if not isinstance(promocoes[categoria], list):
             promocoes[categoria] = [promocoes[categoria]]
-
-        promocoes[categoria].append(mensagem)
-
+        promocoes[categoria].append(payload[1])
     else:
-        # cria nova categoria como lista
-        promocoes[categoria] = [mensagem]
+        promocoes[categoria] = [payload[1]]
 
     with open(caminho_promocoes, 'w', encoding='utf-8') as f:
         json.dump(promocoes, f, indent=4, ensure_ascii=False)
@@ -149,9 +146,10 @@ def main():
             dados.sort(key=lambda x: x['score'], reverse=True)
 
             id = input('id: ')
+            categoria = input('categoria: ')
             vt = input("Vote: +1 positivo | -1 negativo: ")
             if vt == '1':
-                votar(channel, 'promocao.voto', {"voto": 1, "ident": id})
+                votar(channel, 'promocao.voto', {"voto": 1, "ident": id, "categoria": categoria})
             else:
                 votar(channel, 'promocao.voto', {"voto": -1, "ident": id})
 
