@@ -4,7 +4,7 @@ import pika
 import time 
 import json
 
-from server.server import connect, publish
+from server.server import connect, publish, verify_signature
 import random
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,10 +44,13 @@ def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
     print(mensagem)
 
-    payload = mensagem.get("Payload")
-    signature = mensagem.get("Signature")
+    if not verify_signature(mensagem):
+        print("Assinatura inválida. Mensagem descartada.")
+        return
 
-    publish(channel, 'promocao.publicada', ['promocao.publicada', payload[1]], service_name='promocao')
+    payload = mensagem.get("Payload")
+
+    publish(channel, 'promocao.publicada', payload[1], service_name='promocao')
     print('enviou o gateway')
 
 def consume(channel, queue, routingKey):

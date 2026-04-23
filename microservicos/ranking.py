@@ -4,7 +4,7 @@ import pika
 import time 
 import json
 
-from server.server import connect, publish
+from server.server import connect, publish, verify_signature
 import random
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,11 +28,12 @@ def iniciar_bindings():
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode())
     print(mensagem)
-    #DEVE SER FEITO A ASSINATURA DIGITAL
-    #----------- ele não precisa validar chave ------------
+
+    if not verify_signature(mensagem):
+        print("Assinatura inválida. Mensagem descartada.")
+        return
 
     payload = mensagem.get("Payload")
-    signature = mensagem.get("Signature")
 
     voto = payload[1]['voto']
     ident = payload[1]['ident']
@@ -45,7 +46,6 @@ def minha_callback(channel, method, properties, body):
 
     encontrou = False
     item_destaque = False
-
 
     for item in votos_lista:
         if item['id'] == ident:
@@ -90,7 +90,7 @@ def minha_callback(channel, method, properties, body):
     print("Voto atualizado!")
 
     if item_destaque: #se o item tem score maior que 5, vira destaque
-        publish(channel, 'promocao.destaque', ['promocao.destaque', ident, categoria], service_name='ranking')
+        publish(channel, 'promocao.destaque', [ident, categoria], service_name='ranking')
         print('enviou ao notificacao')
 
 def consume(channel, queue, routingKey):

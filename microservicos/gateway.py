@@ -6,7 +6,7 @@ import threading
 
 sys.path.append(os.path.abspath(".."))
 
-from server.server import connect, publish
+from server.server import connect, publish, verify_signature
 import random
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,7 +63,7 @@ def cadastrar_promocao(channel, nome, categoria, preco):
         "preco": preco
     }
 
-    publish(channel, "promocao.recebida", ["promocao.recebida", promocao], service_name='gateway') #MS_promocao
+    publish(channel, "promocao.recebida", promocao, service_name='gateway') #MS_promocao
     print("[Gateway] Promoção enviada ao promocao ")
 
 def listar_promocoes():
@@ -80,15 +80,18 @@ def listar_promocoes():
 
 def votar(channel, routingKey, message):
     print('voto enviado ao ranking')
-    publish(channel, routingKey, [routingKey, message], service_name='gateway')  #MS_ranking
+    publish(channel, routingKey, message, service_name='gateway')  #MS_ranking
     
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
     print(mensagem)
 
     payload = mensagem.get("Payload")
-    signature = mensagem.get("Signature")
 
+    if not verify_signature(mensagem):
+        print("Assinatura inválida. Mensagem descartada.")
+        return
+    
     with open(caminho_promocoes, 'r', encoding='utf-8') as f:
         promocoes = json.load(f)
 
@@ -137,13 +140,14 @@ def main():
             cadastrar_promocao(channel, nome, categoria, preco)
 
         if resp == '2':
-            with open(caminho, 'r', encoding='utf-8') as f:
-                dados = json.load(f)
+            # with open(caminho, 'r', encoding='utf-8') as f:
+            #     dados = json.load(f)
 
             listar_promocoes()
 
             # ordenar do maior para o menor
-            dados.sort(key=lambda x: x['score'], reverse=True)
+            # dados.sort(key=lambda x: x['score'], reverse=True)
+            # print('dados: ', dados)
 
             id = input('id: ')
             categoria = input('categoria: ')

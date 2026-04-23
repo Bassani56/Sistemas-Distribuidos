@@ -1,32 +1,72 @@
 import pika
-import sys
-import time
+
 import json
 import copy
-
 import chave  
 
-def sign_payload(payload, service_name):
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
+import base64
+
+def verify_signature(message):
+    signature = message.get("Signature")
+    payload = message.get("Payload")
+
+    if not signature or not payload:
+        return False
+
+    canonical = json.dumps(payload[1], sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+    service_name = payload[0].split('.')[0]  # ex: promocao.recebida → promocao
+
+    key = RSA.import_key(open(f'./keys/{service_name}_public.der', 'rb').read())
+
+    canonical = json.dumps(
+        payload[1],
+            sort_keys=True,
+            separators=(',', ':'),
+            ensure_ascii=False
+    ).encode('utf-8')
+
+    h = SHA256.new(canonical)
+
+    signature_bytes = base64.b64decode(signature)
+
+    try:
+        pkcs1_15.new(key).verify(h, signature_bytes)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+def sign_payload(message, service_name):
     if service_name is None:
-        return payload
+        return message
 
-    signed_payload = copy.deepcopy(payload)
+    message_copy = copy.deepcopy(message) #copia profunda
 
-    if isinstance(signed_payload, dict) and 'Signature' in signed_payload:
-        signed_payload.pop('Signature')
+    key = RSA.import_key(open(f'./keys/{service_name}_private.der', 'rb').read())
 
-    canonical = json.dumps(signed_payload, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
-    signature_b64 = chave.sign_message(canonical.encode('utf-8'), service_name)
+    canonical = json.dumps(
+        message_copy,
+            sort_keys=True,
+            separators=(',', ':'),
+            ensure_ascii=False
+    ).encode('utf-8')
 
-    if isinstance(signed_payload, dict):
-        signed_payload['Signature'] = signature_b64
-    else:
-        signed_payload = {
-            'Payload': signed_payload,
-            'Signature': signature_b64
-        }
+    h = SHA256.new(canonical)
 
-    return signed_payload
+    signature = pkcs1_15.new(key).sign(h) # Cria um objeto de assinatura usando a chave privada  .sign(h) Assina o hash da mensagem
+
+    signature = pkcs1_15.new(key).sign(h)
+    signature_b64 = base64.b64encode(signature).decode()
+
+    message_copy = {
+        'Payload': [service_name, message_copy],
+        'Signature': signature_b64
+    }
+
+    return message_copy
 
 def connect():
     connection_parameters = pika.ConnectionParameters(
@@ -42,8 +82,13 @@ def connect():
 
     return channel
 
-def publish(channel, routingKey, message, service_name=None):
-    signed_message = sign_payload(message, service_name)
+def publish(channel, routingKey, message, service_name):
+    if service_name != 'notificacao':
+        signed_message = sign_payload(message, service_name)
+
+    else:
+       signed_message = message
+
     channel.basic_publish(
         exchange='promocoes',
         routing_key=routingKey,
@@ -76,7 +121,6 @@ def consume(channel, queue, routingKey):
 
 def minha_callback(channel, method, properties, body):
     print(f" [x] Received {body.decode()}")
-    time.sleep(body.count(b'.'))
     print(" [x] Done")
     channel.basic_ack(delivery_tag = method.delivery_tag)
 

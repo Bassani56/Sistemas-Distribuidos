@@ -4,7 +4,7 @@ import pika
 import time 
 import json
 
-from server.server import connect, publish
+from server.server import connect, publish, verify_signature
 import random
 
 
@@ -35,15 +35,16 @@ def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
     print(mensagem)
 
-    payload = mensagem.get("Payload")
-    signature = mensagem.get("Signature")
+    if not verify_signature(mensagem):
+        print(" Assinatura inválida. Mensagem descartada.")
+        return
 
-    if payload[0] == 'promocao.publicada':
-        print('<< promocao publicada >>')
-        routing_key = f"promocao.{payload[1]['categoria']}"
-        print('routing key: ', routing_key)
-        publish(channel, routing_key, mensagem, service_name='publicada')
-        
+    payload = mensagem.get("Payload")
+
+    routing_key = f"promocao.{payload[1]['categoria']}"
+    publish(channel, routing_key, mensagem, service_name='notificacao')
+    print('<< promocao publicada >>')
+
 def consume(channel, queue):
     channel.basic_consume(
         queue=queue,

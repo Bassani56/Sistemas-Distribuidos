@@ -1,9 +1,9 @@
 [
     {
         "id": "93871899",
-        "voto_positivo": 6,
+        "voto_positivo": 7,
         "voto_negativo": 0,
-        "score": 6,
+        "score": 7,
         "categoria": "calcados"
     },
     {
@@ -47,5 +47,12 @@
         "voto_negativo": 0,
         "score": 1,
         "categoria": "tecido"
+    },
+    {
+        "id": "70143180",
+        "voto_positivo": 1,
+        "voto_negativo": 0,
+        "score": 1,
+        "categoria": "teste"
     }
 ]

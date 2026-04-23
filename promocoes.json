@@ -29,6 +29,12 @@
             "nome": "controle",
             "categoria": "eletronicos",
             "preco": "12"
+        },
+        {
+            "id": "24691008",
+            "nome": "caixa de som",
+            "categoria": "eletronicos",
+            "preco": "50"
         }
     ],
     "roupas": [
@@ -95,6 +101,42 @@
             "nome": "teste",
             "categoria": "teste",
             "preco": "12"
+        },
+        {
+            "id": "97675562",
+            "nome": "",
+            "categoria": "teste",
+            "preco": "teste"
+        },
+        {
+            "id": "22095252",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "teste"
+        },
+        {
+            "id": "60649625",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "teste"
+        },
+        {
+            "id": "35036782",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "teste"
+        },
+        {
+            "id": "27643756",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "teste"
+        },
+        {
+            "id": "47858333",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "teste"
         }
     ]
 }
