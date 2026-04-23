@@ -94,49 +94,5 @@
             "categoria": "tecido",
             "preco": "2"
         }
-    ],
-    "teste": [
-        {
-            "id": "70143180",
-            "nome": "teste",
-            "categoria": "teste",
-            "preco": "12"
-        },
-        {
-            "id": "97675562",
-            "nome": "",
-            "categoria": "teste",
-            "preco": "teste"
-        },
-        {
-            "id": "22095252",
-            "nome": "teste",
-            "categoria": "teste",
-            "preco": "teste"
-        },
-        {
-            "id": "60649625",
-            "nome": "teste",
-            "categoria": "teste",
-            "preco": "teste"
-        },
-        {
-            "id": "35036782",
-            "nome": "teste",
-            "categoria": "teste",
-            "preco": "teste"
-        },
-        {
-            "id": "27643756",
-            "nome": "teste",
-            "categoria": "teste",
-            "preco": "teste"
-        },
-        {
-            "id": "47858333",
-            "nome": "teste",
-            "categoria": "teste",
-            "preco": "teste"
-        }
     ]
 }
