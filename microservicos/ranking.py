@@ -29,10 +29,6 @@ def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode())
     print(mensagem)
 
-    if not verify_signature(mensagem):
-        print("Assinatura inválida. Mensagem descartada.")
-        return
-
     payload = mensagem.get("Payload")
 
     voto = payload[1]['voto']
@@ -90,7 +86,7 @@ def minha_callback(channel, method, properties, body):
     print("Voto atualizado!")
 
     if item_destaque: #se o item tem score maior que 5, vira destaque
-        publish(channel, 'promocao.destaque', [ident, categoria], service_name='ranking')
+        publish(channel, 'promocao.destaque', {"ident": ident, "categoria": categoria}, service_name='ranking')
         print('enviou ao notificacao')
 
 def consume(channel, queue, routingKey):

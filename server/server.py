@@ -47,6 +47,9 @@ def sign_payload(message, service_name):
 
     key = RSA.import_key(open(f'./keys/{service_name}_private.der', 'rb').read())
 
+    if service_name == 'notificacao':
+        message_copy = message_copy[1]
+
     canonical = json.dumps(
         message_copy,
             sort_keys=True,
@@ -83,12 +86,17 @@ def connect():
     return channel
 
 def publish(channel, routingKey, message, service_name):
+    # print('\n', routingKey, service_name, '\n', 'SERVER: ', message, '\n \n')
+
     if service_name != 'notificacao':
         signed_message = sign_payload(message, service_name)
+        # print('MENSAGEM   ASSINADA')
 
     else:
        signed_message = message
-
+       signed_message['Payload'][0] = 'destaque'
+    #    print('N  Ã   O   ASSINADA')
+       
     channel.basic_publish(
         exchange='promocoes',
         routing_key=routingKey,

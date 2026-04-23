@@ -33,17 +33,24 @@ def iniciar_bindings():
 
 def minha_callback(channel, method, properties, body):
     mensagem = json.loads(body.decode()) 
-    print(mensagem)
+    payload = mensagem.get("Payload")
+
+    if payload[0] == 'destaque':
+        return
 
     if not verify_signature(mensagem):
         print(" Assinatura inválida. Mensagem descartada.")
         return
+    
+    if payload[0] == 'ranking':
+        routing_key = 'promocao.destaque'
+    
+    else:
+        routing_key = f'promocao.{payload[1]['categoria']}'
 
-    payload = mensagem.get("Payload")
-
-    routing_key = f"promocao.{payload[1]['categoria']}"
     publish(channel, routing_key, mensagem, service_name='notificacao')
     print('<< promocao publicada >>')
+    print(mensagem)
 
 def consume(channel, queue):
     channel.basic_consume(

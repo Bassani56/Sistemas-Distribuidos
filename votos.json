@@ -1,9 +1,9 @@
 [
     {
         "id": "93871899",
-        "voto_positivo": 7,
+        "voto_positivo": 65,
         "voto_negativo": 0,
-        "score": 7,
+        "score": 65,
         "categoria": "calcados"
     },
     {
@@ -54,5 +54,12 @@
         "voto_negativo": 0,
         "score": 1,
         "categoria": "teste"
+    },
+    {
+        "id": "calcados",
+        "voto_positivo": 1,
+        "voto_negativo": 0,
+        "score": 1,
+        "categoria": "2"
     }
 ]

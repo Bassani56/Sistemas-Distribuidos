@@ -38,10 +38,10 @@ def minha_callback(channel, method, properties, body):
     payload = mensagem.get("Payload")
     signature = mensagem.get("Signature")
 
-    if payload[0] == 'promocao.destaque':
+    if payload[0] == 'ranking':
         print('<< promocao destaque >>')
-        print('id: ', payload[1])
-        print('categoria: ', payload[2])
+        print('id: ', payload[1]['ident'])
+        print('categoria: ', payload[1]['categoria'])
 
     else:
         print("<< promocao publicada >>")

@@ -35,6 +35,36 @@
             "nome": "caixa de som",
             "categoria": "eletronicos",
             "preco": "50"
+        },
+        {
+            "id": "22680908",
+            "nome": "arduino",
+            "categoria": "eletronicos",
+            "preco": "25"
+        },
+        {
+            "id": "13790238",
+            "nome": "teste",
+            "categoria": "eletronicos",
+            "preco": "teste"
+        },
+        {
+            "id": "95768273",
+            "nome": "teste",
+            "categoria": "eletronicos",
+            "preco": "teste"
+        },
+        {
+            "id": "89658987",
+            "nome": "teste",
+            "categoria": "eletronicos",
+            "preco": "teste"
+        },
+        {
+            "id": "77325874",
+            "nome": "teste",
+            "categoria": "eletronicos",
+            "preco": "teste"
         }
     ],
     "roupas": [
@@ -69,6 +99,18 @@
             "nome": "camisola",
             "categoria": "calcados",
             "preco": "12"
+        },
+        {
+            "id": "09039984",
+            "nome": "teste",
+            "categoria": "calcados",
+            "preco": "27777"
+        },
+        {
+            "id": "15451177",
+            "nome": "boti marrom",
+            "categoria": "calcados",
+            "preco": "200"
         }
     ],
     "acessorios": [
@@ -93,6 +135,14 @@
             "nome": "botao",
             "categoria": "tecido",
             "preco": "2"
+        }
+    ],
+    "teste": [
+        {
+            "id": "41289530",
+            "nome": "teste",
+            "categoria": "teste",
+            "preco": "teste"
         }
     ]
 }
